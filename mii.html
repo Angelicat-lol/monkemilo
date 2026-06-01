@@ -428,19 +428,7 @@
             document.getElementById('mii-birthday').value = "";
             document.getElementById('mii-color').selectedIndex = 0;
         }
-        window.onload = async function() {
-    try {
-        const response = await fetch('/.netlify/functions/getMiis');
-        const data = await response.json();
-        console.log("Data from database:", data); // Check your browser console!
-        
-        data.forEach(miiJson => {
-            addMiiToGrid(JSON.parse(miiJson));
-        });
-    } catch (error) {
-        console.error("Failed to load Miis:", error);
-    }
-};
+
     </script>
 </body>
 </html>
