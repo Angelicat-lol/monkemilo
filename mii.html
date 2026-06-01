@@ -399,35 +399,31 @@
         }
 
 
-        function submitMiiProfile() {
-            const miiName = document.getElementById('mii-name').value.trim() || "Guest";
-            const miiBirthday = document.getElementById('mii-birthday').value || "--/--";
-            const miiColor = document.getElementById('mii-color').value;
+        async function submitMiiProfile() {
+    const miiData = {
+        name: document.getElementById('mii-name').value.trim() || "Guest",
+        birthday: document.getElementById('mii-birthday').value || "--/--",
+        color: document.getElementById('mii-color').value,
+        image: currentImageString // This is your base64 Mii image
+    };
 
-            let birthStr = miiBirthday;
-            if(miiBirthday !== "--/--") {
-                const parts = miiBirthday.split('-');
-                birthStr = `${parts[1]}/${parts[2]}`;
-            }
+    try {
+        const response = await fetch('/.netlify/functions/saveMii', {
+            method: 'POST',
+            body: JSON.stringify(miiData)
+        });
 
-            const grid = document.getElementById('plaza-grid');
-            const card = document.createElement('div');
-            card.className = 'mii-card';
-            card.style.borderColor = miiColor; 
-            card.innerHTML = `
-                <img src="${currentImageString}" style="background: radial-gradient(circle, #ffffff 0%, ${miiColor}33 100%)" alt="Mii PFP">
-                <div class="mii-card-name text">${miiName}</div>
-                <div class="mii-card-meta">🎂 Birthday: ${birthStr}</div>
-            `;
-
-            grid.appendChild(card);
-
+        if (response.ok) {
+            // Only add to the screen if the server saved it successfully
+            addMiiToGrid(miiData);
             closeModal();
-            document.getElementById('mii-name').value = "";
-            document.getElementById('mii-id-number').value = "";
-            document.getElementById('mii-birthday').value = "";
-            document.getElementById('mii-color').selectedIndex = 0;
+        } else {
+            alert("Failed to save Mii to the plaza!");
         }
+    } catch (error) {
+        console.error("Error:", error);
+    }
+}
 
     </script>
 </body>
