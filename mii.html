@@ -404,7 +404,7 @@
         name: document.getElementById('mii-name').value.trim() || "Guest",
         birthday: document.getElementById('mii-birthday').value || "--/--",
         color: document.getElementById('mii-color').value,
-        image: currentImageString // This is your base64 Mii image
+        image: currentImageString 
     };
 
     try {
@@ -414,7 +414,6 @@
         });
 
         if (response.ok) {
-            // Only add to the screen if the server saved it successfully
             addMiiToGrid(miiData);
             closeModal();
         } else {
@@ -424,6 +423,23 @@
         console.error("Error:", error);
     }
 }
+function addMiiToGrid(data) {
+    const grid = document.getElementById('plaza-grid');
+    const card = document.createElement('div');
+    card.className = 'mii-card';
+    card.style.borderColor = data.color;
+    card.innerHTML = `
+        <img src="${data.image}" style="background: radial-gradient(circle, #ffffff 0%, ${data.color}33 100%)" alt="Mii PFP">
+        <div class="mii-card-name text">${data.name}</div>
+        <div class="mii-card-meta">🎂 Birthday: ${data.birthday}</div>
+    `;
+    grid.appendChild(card);
+}
+window.onload = async function() {
+    const response = await fetch('/.netlify/functions/getMiis');
+    const miis = await response.json();
+    miis.forEach(mii => addMiiToGrid(mii));
+};
 
     </script>
 </body>
