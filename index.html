@@ -1,0 +1,403 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>monke.milo</title>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <link rel="shortcut icon" href="{Favicon}" />
+        <style>   
+             *{
+                cursor: url("assets/Wii Cursor.cur"), auto;
+                cursor: url("assets/Wii Cursor.cur"), pointer;
+                cursor: url("assets/Wii Cursor.cur"), default !important;
+             }  
+
+             audio{
+                display:none;
+             }              
+
+            @font-face {
+                font-family: 'MyCustomFont';
+                src: url('fonts/contm.ttf') format('truetype'); 
+            }
+            p, a, span, div, li {
+                color:#686868;
+                font-family: 'MyCustomFont', sans-serif; 
+            }
+
+            * {
+                box-sizing: border-box;
+            }
+            
+            body {
+                margin: 0;
+                padding: 0;
+            }
+
+            .cd {
+                display: flex;
+                width: 25%;
+                height: 25%;
+                margin: auto;
+                position: relative;
+                z-index: 0; 
+                padding-bottom:50%;
+                overflow:hidden;
+            }
+            .cd-img{
+                width:100%;
+                height:100%;
+            }
+
+            #cd {
+                width: 100%;
+                height: auto;
+                transition: transform 0.1s linear;
+            }
+            .wii-img {
+                width: 100%;
+                max-width: 600px; 
+                margin: auto;
+                line-height: 0; 
+                margin-top:-105px;
+                padding-bottom:200px;
+            }
+
+            .wii-img img {
+                display: block;
+                width: 100%;
+                height: auto;
+            }
+            main ul.navigation {
+                display: flex;
+                width: 90%;
+                max-width: 1200px;
+                margin: 10vh auto 0 auto; 
+                padding: 1rem;
+                flex-wrap: wrap;
+                list-style-type: none;
+            }
+            main ul.navigation li {
+                position: relative;
+                overflow: hidden;
+                width: calc(25% - 0.8rem);
+                margin: 0.4rem;
+                aspect-ratio: 2 / 1;
+                display: flex;
+                flex-wrap: wrap;
+                align-items: center;
+                justify-content: center;
+                border: 2.4px solid #ccc;
+                border-radius: 1rem; 
+                box-shadow: 2px 2px 10px rgba(0, 0, 0, 0.02);
+                padding: var(--spacing);
+                background-image: repeating-radial-gradient(circle at 14% 30%, white, rgba(0, 0, 0, 0.12) 0.0008px);
+                color: rgba(0, 0, 0, 0.6);
+                
+                opacity: 0;
+                transform: translateY(30px);
+                transition: opacity 0.5s ease-out, transform 0.6s ease-out;
+            }
+            
+            main ul.navigation li.is-visible {
+                opacity: 1;
+                transform: translateY(0);
+            }
+
+            main ul.navigation li:before {
+                content: "";
+                background: linear-gradient(to bottom, rgba(0, 0, 0, 0), rgba(0, 0, 0, 0) 50%, rgba(0, 0, 0, 0.02) 50%, rgba(0, 0, 0, 0.02)), linear-gradient(to top right, rgba(0, 0, 0, 0), rgba(0, 0, 0, 0.12));
+                background-size: 100% 8px, cover;
+                position: absolute;
+                height: 100%;
+                width: 100%;
+                z-index: 0;
+            }
+            .navigation li a {
+                position: relative;
+                z-index: 1;
+                display: flex;
+                flex-wrap: wrap;
+                align-items: center;
+                justify-content: center;
+                width: 100%;
+                height: 100%;
+            }
+            
+            .content {
+                position: fixed;
+                width: 100vw;
+                height: 100vh;
+                top: 0;
+                left: 0;
+                z-index: 1000;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                background: rgba(0, 0, 0, 0.8);
+                opacity: 0;
+                visibility: hidden;
+                transition: opacity 0.3s ease;
+            }
+            .content:target {
+                visibility: visible;
+                pointer-events: auto;
+                opacity: 1;
+            }
+            .content.full .container {
+                width: 90vw;
+                max-height: 85vh;
+                display: flex;
+                flex-direction: column;
+                background: white;
+                text-align: center;
+                border-radius: 3rem;
+                box-shadow: 4px 4px 20px rgba(0, 0, 0, 0.2);
+                padding: 0;
+                overflow: hidden;
+            }
+            .wii {
+                flex: 1;
+                min-height: 0;
+                overflow: hidden;
+                display: flex;
+                justify-content: center;
+                align-items: center;
+            }
+            .wii video {
+                width: 100%;
+                height: 100%;
+                object-fit: contain;
+            }
+            .full .bottom {
+                width: 100%;
+                padding: 1rem;
+                display: flex;
+                justify-content: space-around;
+                align-items: center;
+                flex-shrink: 0;
+                background: #e0e0e0;
+                border-top: 2.4px solid #aaa;
+                
+            }
+
+            .cancel {
+                border-radius: 1.4rem;
+                box-shadow: 0 0 4px 1px rgba(0, 0, 0, 0.08), 0 0 0 4px white, 2px 2px 10px rgba(0, 0, 0, 0.2), 0 0 4px 2px rgba(0, 0, 0, 0.4);
+                display: inline-block;
+                padding: 0.4rem 1rem;
+                text-decoration: none;
+                text-align: center;
+                color: black;
+                width: 80%;
+                background: linear-gradient(to bottom, white 70%, rgba(0, 0, 0, 0.2));
+            }
+            .button {
+                width: 40%;
+                margin: 0.5rem;
+                text-align: center;
+                border-radius: 2rem;
+                display: inline-block;
+                padding: 1rem;
+                position: relative;
+                overflow: hidden;
+                z-index: 1;
+                text-decoration: none;
+                color: #222;
+                box-shadow: 2px 2px 10px 2px rgba(0, 0, 0, 0.08);
+                border: 2.6px solid skyblue;
+                background: #dae3e5;
+            }
+            .button:before { content: ""; width: 94%; left: 0; top: 0px; border-radius: 2rem; height: 40%; background: #ebecee; position: absolute; }
+            .corner { display: block; position: absolute; width: 100%; left: 0; top: 40%; z-index: 1; border-radius: 2rem; height: 100%; background: #dae3e5; }
+            .text { position: relative; z-index: 1; }
+            
+            li img { width: 100%; height: 100%; object-fit: cover; z-index: 0; object-position: center; }
+            
+            .footer-container {
+                position: relative; 
+                width: 100%;
+                height: 200px;
+                filter: drop-shadow(3px 0px 0px skyblue) drop-shadow(-3px 0px 0px skyblue) drop-shadow(0px -3px 0px skyblue);
+                overflow: hidden;
+                margin-top: -10rem;
+            }
+            .c { width: 33%; height: 200px; border-radius: 3rem; background: #bbb; left: -5%; bottom: -20%; position: absolute; }
+            .c:nth-of-type(2) { left: auto; right: -5%; }
+            .m { width: 100%; height: 60%; background: linear-gradient(to bottom, rgba(0, 0, 0, 0), rgba(0, 0, 0, 0) 50%, rgba(0, 0, 0, 0.02) 50%, rgba(0, 0, 0, 0.02)), linear-gradient(to bottom, #bbb, #f5f5f5); position: absolute; top: 40%; background-size: 100% 8px, cover; }
+            .bottom-text { position:relative; width: 250px; text-align: center; margin: auto; padding:70px; }
+            .button-cont { position: absolute; width: 300px; left: 0; z-index: 1; margin-left: -50px; padding: 1%; padding-right:3%; padding-left: 200px; background: rgba(255, 255, 255, 0.2); border-radius: 6rem; display: flex; box-shadow: 0 0 10px 2px rgba(0, 0, 0, 0.08); align-items: center; margin-top: 40px; }
+            .button-cont.right-side { left: auto; right: -40px; padding-left: 1rem; padding-right: 200px; }
+            .button-cont.right-side .button { margin-left: 1rem; }
+            .button-cont .button { min-width: 100px; text-align: center; display: flex; justify-content: center; transform: scale(1.2); align-items: center; border-radius: 100%; height: 100px; border-width: 4px; margin-left: -40px; box-shadow: 4px 4px rgba(0, 0, 0, 0.08); }
+            c:after {
+                content: "";
+                position: absolute;
+                width: 100px;
+                height: 100px;
+                background: radial-gradient(circle at 0 0, transparent 50px, #bbb 50px);
+                top: 0;
+                right: -50px;
+            }
+            @media (max-width: 768px) {
+                .button-cont { height:60px; width:33%; margin-left: -35px; padding-left: 100px; border-radius: 3rem; padding:1%; padding-right:130px; margin-top: 20px; }
+                .button-cont.right-side { left: auto; right: -35px; padding-left: 1rem; padding-right: 100px; }
+                .button-cont .button { min-width: 40px; height: 40px; border-width: 2px; margin-left: 85px; font-size: 0.65rem; transform: scale(1.2); }
+                .content.full .container { width: 95vw; }
+                .full .bottom { padding: 0.5rem; }
+                .footer-container { height: 100px; }
+                .c {
+                    height: 100px;
+                    border-top-left-radius: 1.5rem;
+                    border-top-right-radius: 1.5rem;
+                }
+                .c:after {
+                    width: 50px;
+                    height: 50px;
+                    background: radial-gradient(circle at 0 0, transparent 25px, #bbb 25px);
+                    right: -25px;
+                }
+                .c:nth-of-type(2):after {
+                    right: auto;
+                    left: -25px;
+                    background: radial-gradient(circle at 100% 0, transparent 25px, #bbb 25px);
+                }
+             .cd {
+                display: flex;
+                width: 50%;
+                height: 50%;
+                margin: auto;
+                position: relative;
+                z-index: 0; 
+                padding-bottom:50%;
+                overflow:hidden;
+                }
+                main ul.navigation {
+                width: 80%;
+                margin-top: 5vh;
+                padding: 0.5rem;
+            }
+            main ul.navigation li {
+                width: calc(50% - 0.8rem); 
+                margin: 0.4rem;
+                aspect-ratio: 1.5 / 1; 
+            }
+            
+            .cd {
+                width: 60%;
+                height: 60%;
+            }
+    
+
+            }
+        </style>
+    </head>
+    <body>
+        <main>
+            <div class="cd">
+                <div class="cd-img">
+                     <img id="cd" src="assets/cd.png" alt="CD" />
+                    <audio src="assets/click.wav"></audio>
+                </div>
+            </div>
+            <div class="wii-img">
+                <img src="assets/wii.png" alt="wii"/>
+            </div>
+            <ul class="navigation">
+                <li><a href="#container-1"><img src="https://64.media.tumblr.com/57cf461a1819e5f240894118d1d0c568/d662040e3a2b8722-26/s400x600/c04c16872971599bb3c749bfa29c7d561c736247.pnj" alt="wii menu" /><audio src="assets/click.wav"></audio></a></li>
+                <li><a href="#container-2"><img src="https://64.media.tumblr.com/077b3fa310d0f638c9cc671af80131dc/d662040e3a2b8722-93/s400x600/20eca28477dbe64b8dfc42898ffc8b7e9d7098b2.pnj" alt="mii" /><audio src="assets/click.wav"></audio></a></li>
+                <li><a href="#container-3"><img src="https://64.media.tumblr.com/4acf7d6703348eb3de2d6f422eac02b8/d28e227eb623ad41-cc/s1280x1920/89820b9bf56d7d7e0448b940fa4727a5a32129dc.jpg" alt="shop"><audio src="assets/click.wav"></audio></a></li> 
+                <li><a href="https://www.instagram.com/monke.milo.cooom"><img src="https://64.media.tumblr.com/28ae4ac4079501d6efa5fc5518588e69/d28e227eb623ad41-a4/s1280x1920/3d4522bda6043bf90af3a0114e79038863c79b85.pnj" alt="insta"><audio src="assets/click.wav"></audio></a></li>
+                <li></li><li></li><li></li><li></li>
+            </ul>
+          
+            <div id="container-1" class="content full">
+                <div class="container">
+                    <div class="wii">
+                        <video autoplay loop muted playsinline>
+                            <source src="assets/0001-0240.mp4" type="video/mp4">
+                        </video>
+                    </div>
+                    <div class="bottom">
+                        <a href="#" class="button" id="close-video">Back</a>
+                        <a href="design.html" class="button">Designs</a>
+                    </div>
+                </div>
+            </div>
+
+            <div id="container-2" class="content full">
+              <div class="container">
+                    <div class="wii">
+                            <img source src="assets/miichannel.jpg"/>
+                    </div>
+                    <div class="bottom">
+                        <a href="#" class="button" id="close-video">Back</a>
+                        <a href="mii.html" class="button">Create</a>
+                    </div>
+                </div>
+            </div>
+
+            <div id="container-3" class="content">
+                <div class="container" style="justify-content: center; height: auto;">
+                    <p>Under Construction</p>
+                    <a href="#" class="cancel" style="margin: auto;">Cancel</a>
+                </div>
+            </div>
+
+        
+        <div class="bottom-text">monke.milo.cooom</div>
+        
+        <div class="footer-container">
+            <div class="button-cont">
+                <a class="button" href="/">Home</a>
+            </div>
+            <div class="c"></div><div class="c"></div><div class="m"></div>
+            <div class="button-cont right-side">
+                <a class="button" href="/ask">Ask</a>
+            </div>
+        </div>
+    </main>
+<script>
+    const clickSound = new Audio('assets/click.wav');
+
+    const navLinks = document.querySelectorAll(".navigation li a, .button, .cancel");
+    const cdImage = document.getElementById("cd");
+    const navItems = document.querySelectorAll('main ul.navigation li');
+    const video = document.querySelector('#container-1 video');
+    const closeBtn = document.getElementById('close-video');
+
+    navLinks.forEach(link => {
+        link.addEventListener("mouseenter", () => {
+            clickSound.currentTime = 0; 
+            clickSound.play();
+        });
+    });
+
+    window.onscroll = function() {
+        let scrollValue = window.pageYOffset;
+        cdImage.style.transform = `translateY(${scrollValue * 1.1}px) rotate(${scrollValue / 2}deg)`;
+        
+        if (scrollValue > 390) {
+            navItems.forEach((li, index) => {
+                li.style.transitionDelay = `${index * 0.1}s`;
+                li.classList.add('is-visible');
+            });
+            if (!hasPlayed) { new Audio('assets/WII-START.wav').play(); hasPlayed = true; }
+        } else {
+            navItems.forEach((li) => { li.style.transitionDelay = '0s'; li.classList.remove('is-visible'); });
+            hasPlayed = false;
+        }
+    };
+
+    let hasPlayed = false;
+
+    window.addEventListener('hashchange', () => {
+        if (video) {
+            if (window.location.hash === "#container-1") { video.play(); } 
+            else { video.pause(); video.currentTime = 0; }
+        }
+    });
+
+    closeBtn.addEventListener('click', () => { if(video) { video.pause(); video.currentTime = 0; } });
+</script>
+    </body>
+</html>
