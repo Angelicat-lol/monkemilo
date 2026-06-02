@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>monke.milo</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script type="module" src="https://ajax.googleapis.com/ajax/libs/model-viewer/3.0.1/model-viewer.min.js"></script>
+    <style>
+        * {
+            cursor: url("assets/Wii Cursor.cur"), auto;
+            cursor: url("assets/Wii Cursor.cur"), pointer;
+            cursor: url("assets/Wii Cursor.cur"), default !important;
+            box-sizing: border-box; 
+        }     
+        body { margin: 0; padding: 0; font-family: sans-serif; background-color: #f5f5f5; }
+        
+        #display-container { 
+            width: 100%; 
+            max-width: 600px; 
+            margin: 2rem auto; 
+            position: relative; 
+            height: 500px;      
+        }
+        .tutorial-box {
+            background-color: #ffffff;
+            border: 3px solid #cbd2cb;
+            border-radius: 16px;
+            max-width: 605px;
+            width: 100%;
+            padding: 15px 20px;
+            margin-top: 25px;
+            box-sizing: border-box;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+        }
+        .tutorial-box h3 {
+            margin-top: 0;
+            color: #444;
+            font-size: 16px;
+        }
+        .tutorial-box ol {
+            margin: 0;
+            padding-left: 20px;
+            color: #555;
+            font-size: 14px;
+            line-height: 1.6;
+        }
+
+        .controls { display: flex; justify-content: center; gap: 1rem; margin-top: 1rem; }
+        
+        .button {
+            width: 150px; text-align: center; border-radius: 2rem; display: inline-block;
+            padding: 1rem; position: relative; overflow: hidden; z-index: 1;
+            text-decoration: none; color: #222; box-shadow: 2px 2px 10px 2px rgba(0, 0, 0, 0.08);
+            border: 2.6px solid skyblue; background: #dae3e5; cursor: pointer;
+        }
+        .button:before {
+            content: ""; width: 94%; left: 0; top: 0px; border-radius: 2rem;
+            height: 40%; background: #ebecee; position: absolute;
+        }
+        .button:after {
+            content: ""; width: 54%; left: 0; top: 0px; border-radius: 2rem;
+            height: 100%; background: #ebecee; position: absolute;
+        }
+        @font-face {
+            font-family: 'WiiFont';
+            src: url('fonts/contm.ttf') format('truetype'); 
+        }
+        .text { position: relative; z-index: 1; font-family: 'WiiFont'; }
+    </style>
+</head>
+<body>
+
+    <main>
+        <section id="portfolio">
+            <div id="display-container">
+    <div class="tutorial-box">
+        <h3 class="text">Announcements</h3>
+        <ol>
+            <li>Bello</li>
+        </ol>
+    </div>            </div>
+            
+            <div class="controls">
+                <a href="index.html" class="button"><span class="text">Home</span></a>
+            </div>
+            <audio id="click-sound" src="assets/click.wav"></audio>
+        </section>
+    </main>
+
+<script>
+
+    document.querySelectorAll(".button").forEach(btn => {
+        btn.addEventListener("mouseenter", () => {
+            clickSound.currentTime = 0;
+            clickSound.play();
+        });
+    });
+
+    updateDisplay();
+</script>
+
+</body>
+</html>

@@ -1,0 +1,233 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>monke.milo</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+        * { cursor: url("assets/Wii Cursor.cur"), auto; box-sizing: border-box; }     
+        body { margin: 0; padding: 20px; font-family: sans-serif; background-color: #f5f5f5; }
+        .tutorial-box {
+            background-color: #ffffff;
+            border: 3px solid #cbd2cb;
+            border-radius: 16px;
+            max-width: 605px;
+            width: 100%;
+            padding: 15px 20px;
+            margin-top: 25px;
+            box-sizing: border-box;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+        }
+        .tutorial-box h3 {
+            margin-top: 0;
+            color: #444;
+            font-size: 16px;
+        }
+        .tutorial-box ol {
+            margin: 0;
+            padding-left: 20px;
+            color: #555;
+            font-size: 14px;
+            line-height: 1.6;
+        }
+        .plaza-grid { 
+            display: grid; 
+            grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); 
+            gap: 20px; 
+            max-width: 800px; 
+            margin: 40px auto; 
+        }
+
+        .card-container { perspective: 1000px; width: 100%; height: 200px; cursor: pointer; }
+        
+        .mii-card { 
+            position: relative; width: 100%; height: 100%; 
+            text-align: center; 
+            transform-style: preserve-3d;
+        }
+
+        .mii-card.flipped { 
+            top: 50% !important; 
+            left: 50% !important; 
+            width: 80vw !important; 
+            height: 80vh !important; 
+            max-width: 500px !important; 
+            max-height: 600px !important;
+            transform: translate(-50%, -50%) rotateY(180deg) !important; 
+            border-radius: 24px !important;
+        }
+
+        .card-front, .card-back { 
+            position: absolute; top: 0; left: 0; width: 100%; height: 100%; 
+            backface-visibility: hidden; border-radius: inherit; border: 4px solid #cbd2cb;
+            background: white; padding: 10px; display: flex; flex-direction: column; 
+            align-items: center; justify-content: center;
+        }
+        .card-back { transform: rotateY(180deg); background: #fdfdfd; padding: 20px; }
+        
+        .close-btn {
+            position: absolute; top: 15px; right: 20px;
+            font-size: 30px; cursor: pointer; color: #555; z-index: 10000;
+        }
+
+        .modal-overlay {
+            position: fixed; top: 0; left: 0; width: 100vw; height: 100vh;
+            background: rgba(0,0,0,0.6); z-index: 99990; display: none;
+        }
+
+        .mii-card img { width: 80px; height: 80px; object-fit: contain; margin-bottom: 6px; }
+        .mii-card-name { font-size: 13px; font-weight: bold; color: #333; }
+
+        .button {
+            width: 150px; text-align: center; border-radius: 2rem; display: inline-block;
+            padding: 1rem; border: 2.6px solid skyblue; background: #dae3e5; cursor: pointer;
+            text-decoration: none; color: #222; box-shadow: 2px 2px 10px rgba(0,0,0,0.1);
+        }
+        @font-face { font-family: 'WiiFont'; src: url('fonts/contm.ttf') format('truetype'); }
+        .text { font-family: 'WiiFont', sans-serif; }
+    </style>
+</head>
+<body>
+
+    <div id="modal-overlay" class="modal-overlay" onclick="closeAll(event)"></div>
+
+    <div class="controls" style="text-align:center;">
+        <a href="index.html" class="button"><span class="text">Home</span></a>
+    </div>
+    <div class="tutorial-box">
+        <h3 class="text" style="text-align: center;">Menu Mini Game</h3>
+        <ol>
+            <li class="text"> Select a card</li>
+            <li class="text"> Card will flip and reveal all its secrets!</li>
+
+        </ol>
+    </div>
+
+    
+    <audio id="click-sound" src="assets/click.wav"></audio>
+    <audio id="hover-sound" src="assets/click.wav"></audio>
+
+    <div id="plaza-grid" class="plaza-grid"></div>
+
+    <script>
+        const items = [
+            { img: "assets/menu/classic.png", name: "Classic Matcha", desc: "Original recipe." },
+            { img: "assets/menu/strawberry.png", name: "Strawberry Matcha", desc: "Sweet & pink." },
+            { img: "assets/menu/Milo.png", name: "Milo Matcha", desc: "Milo goodness." },
+            { img: "assets/menu/Peach.png", name: "Peach Matcha", desc: "Fruity delight." },
+            { img: "assets/menu/Saltbread.png", name: "Salt Bread", desc: "Salty and soft." },
+            { img: "assets/menu/BLuebrown.png", name: "m.m Sticker", desc: "Exclusive." },
+            { img: "assets/menu/blueassci.png", name: "m.m Sticker", desc: "ASCII style." },
+            { img: "assets/menu/cursive.png", name: "m.m Sticker", desc: "Cursive flow." },
+            { img: "assets/menu/nerdy.png", name: "Nerdy Sticker", desc: "Stay smart." },
+            { img: "assets/menu/closeup.png", name: "Closeup Sticker", desc: "Macro view." },
+            { img: "assets/menu/fatty.png", name: "Fatty Sticker", desc: "Extra plump." },
+            { img: "assets/menu/smash.png", name: "Smash Sticker", desc: "Smashing it." },
+            { img: "assets/menu/web.png", name: "Web Sticker", desc: "World wide web." },
+            { img: "assets/menu/classic.png", name: "Coming Soon", desc: "A new secret item is on the way. Check back later!" } 
+        ];
+
+        const grid = document.getElementById('plaza-grid');
+        
+        items.forEach((item, index) => {
+            grid.innerHTML += `
+            <div class="card-container" id="container-${index}" onclick="flipCard(this, ${index})">
+                <div class="mii-card" style="border-radius: 16px;">
+                    <div class="card-front">
+                        <img src="${item.img}" alt="${item.name}">
+                        <div class="mii-card-name text">${item.name}</div>
+                    </div>
+                    <div class="card-back">
+                        <div class="close-btn text" onclick="closeAll(event)">X</div>
+                        <h3 class="text">${item.name}</h3>
+                        <p class="text">${item.desc}</p>
+                    </div>
+                </div>
+            </div>`;
+        });
+
+        const hoverSound = document.getElementById('hover-sound');
+        const hoverElements = document.querySelectorAll('.card-container, .button');
+        
+        hoverElements.forEach(element => {
+            element.addEventListener('mouseenter', () => {
+                hoverSound.currentTime = 0; // Reset sound to start to allow rapid hovering
+                hoverSound.play().catch(() => {
+                });
+            });
+        });
+
+        function adjustLastCardSpan() {
+            const containers = document.querySelectorAll('.card-container');
+            if (containers.length === 0) return;
+
+            const lastContainer = containers[containers.length - 1];
+            
+            lastContainer.style.gridColumn = 'auto'; 
+            
+            const gridStyle = window.getComputedStyle(grid);
+            const colCount = gridStyle.gridTemplateColumns.split(' ').length;
+            
+            const remainder = containers.length % colCount;
+            
+            if (remainder !== 0) {
+                const spanCount = (colCount - remainder) + 1;
+                lastContainer.style.gridColumn = `span ${spanCount}`;
+            }
+        }
+
+        adjustLastCardSpan();
+        window.addEventListener('resize', adjustLastCardSpan);
+
+        function flipCard(container, index) {
+            const card = container.querySelector('.mii-card');
+            if(!card || card.classList.contains('flipped')) return;
+            
+            document.getElementById('click-sound').play();
+            
+            const rect = card.getBoundingClientRect();
+            
+            document.body.appendChild(card);
+            card.dataset.origin = `container-${index}`;
+            
+            card.style.transition = 'none';
+            card.style.position = 'fixed';
+            card.style.top = rect.top + 'px';
+            card.style.left = rect.left + 'px';
+            card.style.width = rect.width + 'px';
+            card.style.height = rect.height + 'px';
+            card.style.transform = 'translate(0, 0) rotateY(0deg)';
+            card.style.zIndex = '99999';
+            
+            document.getElementById('modal-overlay').style.display = 'block';
+            
+            card.offsetHeight;
+            
+            card.style.transition = 'all 0.8s cubic-bezier(0.4, 0, 0.2, 1)';
+            card.classList.add('flipped');
+        }
+
+        function closeAll(event) {
+            if(event) event.stopPropagation();
+            const card = document.querySelector('.mii-card.flipped');
+            if(!card) return;
+
+            card.classList.remove('flipped');
+            card.style.transition = '';
+            card.style.position = '';
+            card.style.top = '';
+            card.style.left = '';
+            card.style.width = '';
+            card.style.height = '';
+            card.style.transform = '';
+            card.style.zIndex = '';
+
+            document.getElementById('modal-overlay').style.display = 'none';
+
+            const origin = document.getElementById(card.dataset.origin);
+            if (origin) {
+                origin.appendChild(card);
+            }
+        }
+    </script>
+</body>
+</html>
