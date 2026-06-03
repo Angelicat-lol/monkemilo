@@ -2,6 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
+    <link rel="shortcut icon" href="/assets/images/milo.svg" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>From Mii to You</title>
     <style>
@@ -298,75 +299,17 @@
         </div>
     </div>
 
-    <div class="tutorial-box">
-        <h3 class="text">How to Save & Upload Your Mii:</h3>
-        <ol>
-            <li>Create your character inside the gray game console canvas area above.</li>
-            <li>Click the gray <strong>Export</strong> button on the left panel inside the tool.</li>
-            <li>Choose your preferred sizing, then hit download to save the picture file locally.</li>
-            <li>Click the green <strong>Upload Mii </strong></li>
-        </ol>
-    </div>
 
     <div class="controls">
         <a href="index.html" class="button"><span class="text">Home</span></a>
-        
-        <button type="button" class="button upload-trigger" onclick="triggerFileBrowser()">
-            <span class="text">Upload Mii </span>
-        </button>
-        
-        <input type="file" id="mii-upload-input" accept="image/*" onchange="handleFileSelection(event)">
     </div>
 
-    <div id="popup-modal" class="modal-backdrop">
-        <div class="mii-popup-form">
-            <h4 class="text">Mii Registration</h4>
-            
-            <div class="form-row">
-                <label>Nickname</label>
-                <input type="text" id="mii-name" placeholder="Guest" maxlength="10">
-            </div>
 
-            <div class="form-row">
-                <label>Birthday</label>
-                <input type="date" id="mii-birthday">
-            </div>
 
-            <div class="form-row">
-                <label>Favorite Color</label>
-                <select id="mii-color">
-                    <option value="#ff3b30">Red</option>
-                    <option value="#fd6f19">Orange</option>
-                    <option value="#ffd920">Yellow</option>
-                    <option value="#78d320">Lime Green</option>
-                    <option value="#007830">Green</option>
-                    <option value="#0a49b3">Blue</option>
-                    <option value="#3caadf">Sky Blue</option>
-                    <option value="#f55a7c">Pink</option>
-                    <option value="#7428ae">Purple</option>
-                    <option value="#483817">Brown</option>
-                    <option value="#e0e0e0">White</option>
-                    <option value="#181914">Black</option>
-                </select>
-            </div>
-
-            <div class="popup-actions">
-                <button type="button" class="button" style="border-color:#ff9b9b; background:#ffebeb;" onclick="closeModal()">Cancel</button>
-                <button type="button" class="button" style="border-color:#a3e2a3; background:#e2f4e2;" onclick="submitMiiProfile()">Done</button>
-            </div>
-        </div>
-    </div>
-
-    <div class="plaza-gallery">
-        <h2 class="text" style="color: #555; font-size: 18px;">Mii Plaza Collection</h2>
-        <div id="plaza-grid" class="plaza-grid"></div>
-    </div>
-
-    <audio id="click-sound" src="assets/click.wav"></audio>
+    <audio id="click-sound" src="assets/audios/click.wav"></audio>
 
     <script>
         const clickSound = document.getElementById('click-sound');
-        let currentImageString = "";
 
 
         document.querySelectorAll(".button").forEach(btn => {
@@ -375,59 +318,6 @@
                 clickSound.play().catch(err => console.log("Audio waiting for player click."));
             });
         });
-
-        function triggerFileBrowser() {
-            document.getElementById('mii-upload-input').click();
-        }
-
-        function handleFileSelection(event) {
-            const file = event.target.files[0];
-            if (file) {
-                const reader = new FileReader();
-                reader.onload = function(e) {
-                    currentImageString = e.target.result;
-                    
-                    document.getElementById('popup-modal').style.display = 'flex';
-                }
-                reader.readAsDataURL(file);
-            }
-        }
-
-        function closeModal() {
-            document.getElementById('popup-modal').style.display = 'none';
-            document.getElementById('mii-upload-input').value = ""; 
-        }
-
-
-        function submitMiiProfile() {
-            const miiName = document.getElementById('mii-name').value.trim() || "Guest";
-            const miiBirthday = document.getElementById('mii-birthday').value || "--/--";
-            const miiColor = document.getElementById('mii-color').value;
-
-            let birthStr = miiBirthday;
-            if(miiBirthday !== "--/--") {
-                const parts = miiBirthday.split('-');
-                birthStr = `${parts[1]}/${parts[2]}`;
-            }
-
-            const grid = document.getElementById('plaza-grid');
-            const card = document.createElement('div');
-            card.className = 'mii-card';
-            card.style.borderColor = miiColor; 
-            card.innerHTML = `
-                <img src="${currentImageString}" style="background: radial-gradient(circle, #ffffff 0%, ${miiColor}33 100%)" alt="Mii PFP">
-                <div class="mii-card-name text">${miiName}</div>
-                <div class="mii-card-meta">🎂 Birthday: ${birthStr}</div>
-            `;
-
-            grid.appendChild(card);
-
-            closeModal();
-            document.getElementById('mii-name').value = "";
-            document.getElementById('mii-id-number').value = "";
-            document.getElementById('mii-birthday').value = "";
-            document.getElementById('mii-color').selectedIndex = 0;
-        }
     </script>
 </body>
 </html>

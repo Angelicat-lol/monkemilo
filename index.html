@@ -3,12 +3,12 @@
     <head>
         <title>monke.milo</title>
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <link rel="shortcut icon" href="{Favicon}" />
+        <link rel="shortcut icon" href="/assets/images/milo.svg" />
         <style>   
              *{
-                cursor: url("assets/Wii Cursor.cur"), auto;
-                cursor: url("assets/Wii Cursor.cur"), pointer;
-                cursor: url("assets/Wii Cursor.cur"), default !important;
+                cursor: url("assets/images/Wii Cursor.cur"), auto;
+                cursor: url("assets/images/Wii Cursor.cur"), pointer;
+                cursor: url("assets/images/Wii Cursor.cur"), default !important;
              }  
 
              audio{
@@ -295,18 +295,18 @@
         <main>
             <div class="cd">
                 <div class="cd-img">
-                     <img id="cd" src="assets/cd.png" alt="CD" />
-                    <audio src="assets/click.wav"></audio>
+                     <img id="cd" src="assets/images/cd.png" alt="CD" />
+                    <audio src="assets/audios/click.wav"></audio>
                 </div>
             </div>
             <div class="wii-img">
-                <img src="assets/wii.png" alt="wii"/>
+                <img src="assets/images/wii.png" alt="wii"/>
             </div>
             <ul class="navigation">
-                <li><a href="#container-1"><img src="https://64.media.tumblr.com/57cf461a1819e5f240894118d1d0c568/d662040e3a2b8722-26/s400x600/c04c16872971599bb3c749bfa29c7d561c736247.pnj" alt="wii menu" /><audio src="assets/click.wav"></audio></a></li>
-                <li><a href="#container-2"><img src="https://64.media.tumblr.com/077b3fa310d0f638c9cc671af80131dc/d662040e3a2b8722-93/s400x600/20eca28477dbe64b8dfc42898ffc8b7e9d7098b2.pnj" alt="mii" /><audio src="assets/click.wav"></audio></a></li>
-                <li><a href="#container-3"><img src="https://64.media.tumblr.com/4acf7d6703348eb3de2d6f422eac02b8/d28e227eb623ad41-cc/s1280x1920/89820b9bf56d7d7e0448b940fa4727a5a32129dc.jpg" alt="shop"><audio src="assets/click.wav"></audio></a></li> 
-                <li><a href="https://www.instagram.com/monke.milo.cooom"><img src="https://64.media.tumblr.com/28ae4ac4079501d6efa5fc5518588e69/d28e227eb623ad41-a4/s1280x1920/3d4522bda6043bf90af3a0114e79038863c79b85.pnj" alt="insta"><audio src="assets/click.wav"></audio></a></li>
+                <li><a href="#container-1"><img src="https://64.media.tumblr.com/57cf461a1819e5f240894118d1d0c568/d662040e3a2b8722-26/s400x600/c04c16872971599bb3c749bfa29c7d561c736247.pnj" alt="wii menu" /><audio src="assets/audios/click.wav"></audio></a></li>
+                <li><a href="#container-2"><img src="https://64.media.tumblr.com/077b3fa310d0f638c9cc671af80131dc/d662040e3a2b8722-93/s400x600/20eca28477dbe64b8dfc42898ffc8b7e9d7098b2.pnj" alt="mii" /><audio src="assets/audios/click.wav"></audio></a></li>
+                <li><a href="#container-3"><img src="https://64.media.tumblr.com/4acf7d6703348eb3de2d6f422eac02b8/d28e227eb623ad41-cc/s1280x1920/89820b9bf56d7d7e0448b940fa4727a5a32129dc.jpg" alt="shop"><audio src="assets/audios/click.wav"></audio></a></li> 
+                <li><a href="https://www.instagram.com/monke.milo.cooom"><img src="https://64.media.tumblr.com/28ae4ac4079501d6efa5fc5518588e69/d28e227eb623ad41-a4/s1280x1920/3d4522bda6043bf90af3a0114e79038863c79b85.pnj" alt="insta"><audio src="assets/audios/click.wav"></audio></a></li>
                 <li></li><li></li><li></li><li></li>
             </ul>
           
@@ -314,7 +314,7 @@
                 <div class="container">
                     <div class="wii">
                         <video autoplay loop muted playsinline>
-                            <source src="assets/0001-0240.mp4" type="video/mp4">
+                            <source src="assets/videos/0001-0240.mp4" type="video/mp4">
                         </video>
                     </div>
                     <div class="bottom">
@@ -327,7 +327,7 @@
             <div id="container-2" class="content full">
               <div class="container">
                     <div class="wii">
-                            <img source src="assets/miichannel.jpg"/>
+                            <img source src="assets/images/miichannel.jpg"/>
                     </div>
                     <div class="bottom">
                         <a href="#" class="button" id="close-video">Back</a>
@@ -340,7 +340,7 @@
                 <div class="container">
                     <div class="wii">
                         <video autoplay loop muted playsinline>
-                            <source src="assets/0001-0240.mp4" type="video/mp4">
+                            <source src="assets/videos/IMG_1554.MOV" type="video/mp4">
                         </video>
                     </div>
                     <div class="bottom">
@@ -364,7 +364,7 @@
         </div>
     </main>
 <script>
-    const clickSound = new Audio('assets/click.wav');
+    const clickSound = new Audio('assets/audios/click.wav');
 
     const navLinks = document.querySelectorAll(".navigation li a, .button, .cancel");
     const cdImage = document.getElementById("cd");
@@ -388,7 +388,7 @@
                 li.style.transitionDelay = `${index * 0.1}s`;
                 li.classList.add('is-visible');
             });
-            if (!hasPlayed) { new Audio('assets/WII-START.wav').play(); hasPlayed = true; }
+            if (!hasPlayed) { new Audio('assets/audios/WII-START.wav').play(); hasPlayed = true; }
         } else {
             navItems.forEach((li) => { li.style.transitionDelay = '0s'; li.classList.remove('is-visible'); });
             hasPlayed = false;
