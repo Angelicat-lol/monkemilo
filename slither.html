@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <link rel="shortcut icon" href="/assets/images/milo.svg" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Slither</title>
+    <style>
+        body {
+            background-color: #e8ede8;
+            margin: 0;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            min-height: 100vh;
+            box-sizing: border-box;
+        }
+
+        .game-viewport {
+            width: 800px;
+            height: 500px;
+            border: 6px solid #cbd2cb;
+            border-radius: 16px;
+            box-shadow: 0 8px 24px rgba(0,0,0,0.15);
+            background-color: #ffffff;
+            overflow: hidden;
+            margin-top: 20px;
+        }
+
+        .game-viewport iframe {
+            width: 100%;
+            height: 100%;
+            border: none;
+        }
+
+        .controls {
+            display: flex;
+            justify-content: center;
+            margin-top: 1.5rem;
+            width: 100%;
+        }
+
+        .button {
+            width: 150px;
+            text-align: center;
+            border-radius: 2rem;
+            display: inline-block;
+            padding: 1rem;
+            position: relative;
+            overflow: hidden;
+            z-index: 1;
+            text-decoration: none;
+            color: #222;
+            box-shadow: 2px 2px 10px 2px rgba(0, 0, 0, 0.08);
+            border: 2.6px solid skyblue;
+            background: #dae3e5;
+            cursor: pointer;
+            box-sizing: border-box;
+            transition: transform 0.1s ease;
+        }
+
+        .button:active {
+            transform: scale(0.97);
+        }
+
+        .button:before {
+            content: "";
+            width: 94%;
+            left: 0;
+            top: 0px;
+            border-radius: 2rem;
+            height: 40%;
+            background: #ebecee;
+            position: absolute;
+        }
+
+        .button:after {
+            content: "";
+            width: 54%;
+            left: 0;
+            top: 0px;
+            border-radius: 2rem;
+            height: 100%;
+            background: #ebecee;
+            position: absolute;
+        }
+
+        @font-face {
+            font-family: 'WiiFont';
+            src: url('fonts/contm.ttf') format('truetype');
+        }
+
+        .text {
+            position: relative;
+            z-index: 2;
+            font-family: 'WiiFont', 'Arial Rounded MT Bold', sans-serif;
+        }
+
+        @media (max-width: 840px) {
+            .game-viewport {
+                width: 100%;
+                height: 450px;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="game-viewport">
+        <iframe 
+            src="https://slither.io" 
+            allow="fullscreen">
+        </iframe>
+    </div>
+
+    <div class="controls">
+        <a href="index.html" class="button"><span class="text">Home</span></a>
+    </div>
+
+    <audio id="click-sound" src="assets/audios/click.wav"></audio>
+
+    <script>
+        const clickSound = document.getElementById('click-sound');
+
+        document.querySelectorAll(".button").forEach(btn => {
+            btn.addEventListener("mouseenter", () => {
+                clickSound.currentTime = 0;
+                clickSound.play().catch(err => console.log("Audio waiting for player click."));
+            });
+        });
+    </script>
+</body>
+</html>
