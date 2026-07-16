@@ -79,7 +79,8 @@
 
         .mii-card img { width: 100px; height: 100px; object-fit: contain; margin-bottom: 6px; }
         .mii-card-name { font-size: 13px; font-weight: bold; color: #333; }
-
+        .mii-card img[src*="sheet.png"],
+        .mii-card img[src*="Polaroid.png"] {width: 145px; height: 145px;}
         .button {
             width: 150px; text-align: center; border-radius: 2rem; display: inline-block;
             padding: 1rem; border: 2.6px solid skyblue; background: #dae3e5; cursor: pointer;
@@ -116,11 +117,26 @@
     <div class="tutorial-box">
         <h3 class="text" style="text-align: center;">Menu Mini Game</h3>
         <ol>
-            <li class="text"> Select a card</li>
-            <li class="text"> Card will flip and reveal all its secrets!</li>
-            <p class = "text" style ="text-align:center;">p.s this is the monke.milo website! Look around! </p>
+            <li class="text"> Select a card. Card will flip and reveal all its secrets!</li>
+            <li class="text"> All drinks are 12 ounces </li>
+            <li class="text"> 4 grams of Marukyu Koyamaen matcha</li>
+            <li class="text">  Milk options </li>
+                <ul>
+                    <li class="text"> Lactose Free - Whole Milk</li>
+                    <li class="text"> Oat Milk</li>
+                    <li class="text"> Almond Milk</li>
+               </ul>
+            <li class="text">  Sweetner options </li>
+                <ul>
+                    <li class="text"> Agave</li>
+                    <li class="text"> Vanilla Maple</li>
+                </ul>
+            <li class="text">  You can buy a polaroid here and skip the line! </li>
 
+
+            <p class = "text" style ="text-align:center;">p.s this is the monke.milo website! Look around! </p>
         </ol>
+
     </div>
 
     
@@ -131,16 +147,17 @@
 
     <script>
         const items = [
+            { img: "assets/menu/Milo.png", name: "THE MILO", price: "$8", desc: "Milo's goodness. Staff favorites. Izuzu MK matcha finished with the creamiest matcha creme top." },
             { img: "assets/menu/classic.png", name: "Classic Matcha", price: "$6", desc: "Can never go wrong with the classic. Perfect for first timers and pro matcha lovers." },
             { img: "assets/menu/strawberry.png", name: "Strawberry Matcha", price: "$7", desc: "Sweet and irresistisable home made strawberry jam AND syrup. Always and forever topped of with strawberry creme top." },
-            { img: "assets/menu/Milo.png", name: "THE MILO", price: "$8", desc: "Milo's goodness. Staff favorites. Izuzu MK matcha finished with the creamiest matcha creme top." },
-            
+          
             { img: "assets/menu/Peach.png", name: "Peach Matcha", price: "$6.50", desc: "Peach season summer special. Thick and sweet homemade peach jam that will have you fishing for every last sip.", exclusive: "Summer Exclusive", season: "summer", isAvailable: true },
             
             { img: "assets/menu/go bananas.png", name: "GO BANANAS Matcha", price: "$7", desc: "Banana pudding matcha! Homemade and topped of with a biscoff cookie." },
-            { img: "assets/menu/Chocobanana.png", name: "Chocobanana", price: "$2", desc: "Chocolate covered frozen banana. Choice of sprinkles or no sprinkles." },            
+            { img: "assets/menu/Chocobanana.png", name: "Chocobanana", price: "$2", desc: "Chocolate covered frozen banana. Choice of sprinkles or no sprinkles.", exclusive: "Summer Exclusive", season: "summer", isAvailable: true  },            
             
             { img: "assets/menu/Saltbread.png", name: "Salt Bread", price: "$1.50", desc: "Super crispy and flaky on the outside. Soft and buttery on the inside. Best enjoyed with matcha.", exclusive: "Winter Exclusive", season: "winter", isAvailable: false },
+            { img: "assets/menu/Polaroid.png", name: "Polaroid Pic", price: "$1", desc: "Poloroid pic for only $1. Sweet memory of monke.milo and TGM. Skip the line, buy it now. Save you recipt for proof of purchase. ", link:"https://square.link/u/lfw4iypJ"},
             
             { img: "assets/menu/BLuebrown.png", name: "m.m Sticker", price: "$1", desc: "Exclusive." },
             { img: "assets/menu/blueassci.png", name: "m.m Sticker", price: "$1", desc: "ASCII style." },
@@ -149,7 +166,7 @@
             { img: "assets/menu/closeup.png", name: "Closeup Sticker", price: "$1", desc: "Macro view." },
             { img: "assets/menu/fatty.png", name: "Fatty Sticker", price: "$1", desc: "Extra plump." },
             { img: "assets/menu/smash.png", name: "Smash Sticker", price: "$1", desc: "Smashing it." },
-            { img: "assets/menu/web.png", name: "Web Sticker", price: "$1", desc: "World wide web." },
+            { img: "assets/menu/web.png", name: "Doodle Sticker", price: "$1", desc: "Milo Doodle." },
             { img: "assets/menu/sheet.png", name: "Sticker Sheet", price: "$5", desc: "A sticker sheet with all stickers + extras in a mini size for all your sticker needs!" } 
         ];
 
@@ -159,7 +176,6 @@
             let badgeHTML = '';
             let unavailableClass = '';
 
-            // Check if it's a seasonal/exclusive item
             if (item.exclusive) {
                 if (item.isAvailable === false) {
                     badgeHTML = `<div class="exclusive-badge text unavailable">${item.exclusive} (Unavailable)</div>`;
@@ -167,6 +183,18 @@
                 } else {
                     badgeHTML = `<div class="exclusive-badge text ${item.season}">${item.exclusive}</div>`;
                 }
+            }
+              let orderButtonHTML = '';
+            if (item.link && item.isAvailable !== false) {
+                orderButtonHTML = `
+                <button onclick="event.stopPropagation(); openCheckout('${item.link}');" class="button text" style="margin-top: 15px; margin-bottom: 0; padding: 0.6rem 1.2rem; border-color: #5cb85c; background: #e6f4ea; font-size: 14px; width: auto;">
+                Buy Now
+                </button>`;
+            } else if (item.isAvailable === false) {
+                orderButtonHTML = `
+                <button disabled class="button text" style="margin-top: 15px; margin-bottom: 0; padding: 0.6rem 1.2rem; border-color: #ccc; background: #eaeaea; color: #888; cursor: not-allowed; font-size: 14px; width: auto;">
+                    Sold Out
+                </button>`;
             }
 
             grid.innerHTML += `
@@ -183,6 +211,7 @@
                         <img style="height:300px; width:300px" src="${item.img}"> 
                         <h3 class="text">${item.name}</h3>
                         <p class="text">${item.desc}</p>
+                        ${orderButtonHTML}
                     </div>
                 </div>
             </div>`;
@@ -269,6 +298,19 @@
             if (origin) {
                 origin.appendChild(card);
             }
+        }
+
+        function openCheckout(url) {
+            const width = 450;
+            const height = 650;
+            const left = (window.screen.width / 2) - (width / 2);
+            const top = (window.screen.height / 2) - (height / 2);
+            
+            window.open(
+                url, 
+                'SquareCheckout', 
+                `width=${width},height=${height},top=${top},left=${left},status=no,menubar=no,toolbar=no,scrollbars=yes,resizable=yes`
+            );
         }
     </script>
 </body>
